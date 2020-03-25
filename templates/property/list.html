@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main %}
+<main>
+  <h1>Properties</h1>
+  <ul>
+    {% for property in properties %}
+    <li>{{property.price}}</li>
+    {% endfor %}
+  </ul>
+</main>
+{% endblock %}
