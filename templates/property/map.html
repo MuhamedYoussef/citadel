@@ -7,11 +7,11 @@
 
 
 {% block main %}
-<main>
+<main class="map">
   <div id="map"></div>
 
   <section class="panel bg-white p-4 d-none">
-    <i class="closePanel fas fa-times pointer mb-4"></i>
+    <i class="closePanel fas fa-times text-primary pointer mb-4"></i>
 
     <div class="ad rounded hoverable ">
       <img class="rounded-top" src="{% static 'img/apartment.jpg' %}" alt="property_img">
@@ -28,8 +28,13 @@
           <li>Bathroom: <span></span></li>
         </ul>
         <p class="address text-muted">Madenati, Main street, 3551</p>
-        <div class="d-flex justify-content-center mt-2">
-          <button class="btn btn-outline-primary">More details</button>
+        <div class="row mt-2">
+          <div class="col">
+            <button class="btn btn-outline-secondary btn-block">Open offer</button>
+          </div>
+          <div class="col">
+            <button class="btn btn-primary btn-block">Map features</button>
+          </div>
         </div>
       </div>
     </div>
@@ -44,23 +49,27 @@
 <script src="{% static 'js/map.js' %}"></script>
 <script>
 
+  const locationIcon = L.icon({
+    iconUrl: "{% static 'img/location.svg' %}",
+    iconSize: [20, 20],
+  })
+
   // Get the properties from API
   axios("{% url 'property' %}").then(res => {
     const data = JSON.parse(res.data);
 
-    data.features.forEach(feature => {
-      const coordinates = feature.geometry.coordinates;
-      marker = L.marker([coordinates[1], coordinates[0]]).addTo(map);
-      marker.feature = feature;
-      marker.on('click', e => showPanel(e.target.feature))
+    L.geoJSON(data, {
+      pointToLayer: (feature, latlng) => {
+        return L.marker(latlng, icon=locationIcon)
+      },
+      
+      onEachFeature: (feature, layer) => {
+        layer.on('click', e => showPanel(feature))
+      }
+    }).addTo(map)
 
-      // Better attaching the event listner
-      // https://gis.stackexchange.com/questions/172508/add-an-event-listener-on-a-marker-in-leaflet/172586
-      // console.log(marker)
-      // console.log(feature.geometry.coordinates)
-    });
+
   });
-
 
 
 </script>

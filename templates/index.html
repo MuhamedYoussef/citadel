@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
+{% endblock %}
+
+
+{% block main %}
+<main class="index">
+  <section class="landing bg-secondary">
+    <div class="container">
+      <!-- Tow sides section -->
+      <div class="row" style="padding-top: 20vh;">
+        <!-- intro text -->
+        <div class="col text-white">
+          <h1 class="display-4">The most <span class="text-primary">convient</span> way to find your property</h1>
+          <!-- <p class="lead text-primary mt-5">Start now, it's free!</p> -->
+          <p class="lead text-s mt-5">Get started now using the new map search and find out what features your new property have!</p>
+        </div>
+
+        <!-- search form -->
+        <div class="col">
+          <form class="ml-auto" style="max-width: 80%;">
+            <div class="row">
+              <div class="col">
+                <div class="dropdown">
+                  <button class="text-left dropdown-white dropdown-toggle" type="button" id="deal_type" data-toggle="dropdown">Buy</button>
+                  <div class="dropdown-menu" aria-labelledby="deal_type">
+                    <a class="dropdown-item" href="#">Buy</a>
+                    <a class="dropdown-item" href="#">Rent</a>
+                    <a class="dropdown-item" href="#">Day use</a>
+                  </div>
+                </div>              
+              </div>
+              <div class="col">
+                <div class="dropdown">
+                  <button class="text-left dropdown-white dropdown-toggle" type="button" id="offer_type" data-toggle="dropdown">Flat</button>
+                  <div class="dropdown-menu" aria-labelledby="offer_type">
+                    <a class="dropdown-item" href="#">Flat</a>
+                    <a class="dropdown-item" href="#">House</a>
+                    <a class="dropdown-item" href="#">Villa</a>
+                  </div>
+                </div>              
+              </div>
+            </div>
+
+            <div class="form-group mt-3">
+              <input type="text" class="form-control form-control-lg" placeholder="City..">
+            </div>
+  
+            <button class="btn btn-primary btn-lg btn-block mt-5">Search</button>
+          </form>
+        </div>
+      </div>
+
+
+    </div>
+
+  </section>
+</main>
+{% endblock %}
+
+
+{% block js %}
+{% endblock %}

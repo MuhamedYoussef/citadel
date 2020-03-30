@@ -28,11 +28,7 @@ class PropertyList(APIView):
 
     def get(self, request):
         # properties = PropertySerializer(Property.objects.all(), many=True)
-
         from django.core.serializers import serialize
-
         properties = serialize('geojson', Property.objects.all(), geometry_field='location')
-
-
 
         return Response(properties)
