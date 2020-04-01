@@ -10858,7 +10858,7 @@ body .pointer {
 }
 
 main.index .landing {
-  height: 93.7vh;
+  height: 100vh;
 }
 
 main.map #map {
@@ -10870,10 +10870,15 @@ main.map #map {
   height: 100vh;
 }
 
+main.map .leaflet-control-container {
+  position: absolute;
+  top: 10vh;
+}
+
 main.map .panel {
   width: 25rem;
   height: 100vh;
-  z-index: 1000;
+  z-index: 10000;
   position: absolute;
   top: 0;
   right: 0;
