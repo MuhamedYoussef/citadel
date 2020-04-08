@@ -9,7 +9,8 @@ var map = L.map('map').setView({lat: 29.26805652909215, lng: 30.942992869120395}
 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     maxZoom: 18,
-    id: 'mapbox/streets-v11',
+    // id: 'mapbox/streets-v11',
+    id: 'mapbox/light-v9',
     tileSize: 512,
     zoomOffset: -1,
     accessToken: 'pk.eyJ1IjoibXVoYW1lZHlvdXNzZWYiLCJhIjoiY2s3cnBhdG00MGVtajNucWQyeDZhanVqdiJ9.ejPNZfqzS3AY0ctYG_4zeg'
@@ -32,7 +33,7 @@ const formatter = new Intl.NumberFormat('en-US', {
 
 
 // Show panel
-function showPanel(feature) {
+function showPanel(feature, layer) {
   // Show the panel
   const panel = document.querySelector('.panel')
   panel.classList.remove('d-none');
@@ -50,7 +51,10 @@ function showPanel(feature) {
       element.innerText = feature.properties[key]
     }
   })
-  
+
+
+  // Add id to the featureProperty
+  document.getElementById('featureProperty').dataset.id = layer._leaflet_id;
 }
 
 
