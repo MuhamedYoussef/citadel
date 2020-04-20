@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block head %}
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
 {% endblock %}
 
@@ -11,8 +11,8 @@
 <main class="map">
   <div id="map"></div>
 
-  <section class="panel bg-white p-4 d-none">
-    <i class="closePanel fas fa-times text-primary pointer mb-4"></i>
+  <section class="panel bg-white p-4">
+    <i class="fas fa-times text-primary pointer mb-4" onclick="panelControl.hide(this)"></i>
 
     <div class="ad rounded hoverable ">
       <img class="rounded-top" src="{% static 'img/apartment.jpg' %}" alt="property_img">
@@ -34,7 +34,7 @@
             <button class="btn btn-outline-secondary btn-block">Open offer</button>
           </div>
           <div class="col">
-            <button id="featureProperty" class="btn btn-primary btn-block" onclick="featureProperty(this)" data-id="">Map features</button>
+            <button id="featureProperty" class="btn btn-primary btn-block" onclick="handleFeatureProperty(this)" data-id="">Map features</button>
           </div>
         </div>
       </div>
@@ -45,95 +45,46 @@
 
 
 {% block js %}
-<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+  // Some global JS
+
+  // Static url generator
+  const static = url => `{% static '' %}${url}`;
+
+</script>
 
 <script src="{% static 'js/map.js' %}"></script>
+<script src="{% static 'js/control.js' %}"></script>
 <script>
 
-  // Custom location icon
-  const locationIcon = L.icon({
-    iconUrl: "{% static 'img/location.svg' %}",
-    iconSize: [25, 25],
-  });
 
 
-
-  // Properties = []
-  let properties;
-
-
-  // Handlers for the map
-  function propertyClicked(feature, layer) {
-    map.flyTo(feature.geometry.coordinates.reverse(), 14)
-    showPanel(feature, layer)
-  }
-
-
-  function featureProperty(element) {
-    for (layer in properties._layers) {
-      if (layer == element.dataset.id) {
-        // Selected property layer
-        const property = properties._layers[layer];
-
-        // Draw area around the property to search for POI in it
-        const area = L.circle(property.feature.geometry.coordinates, radius=1000 * 5).addTo(map);
-        map.fitBounds(area.getBounds(), paddingTopLeft=[0,-200])
-
-      }
-    }
-  }
-
-
-
-
-
-  // Map functions
-  // let waypoints = []
-  function pointToLayer(feature, latlng) {
-    // // append the points
-    // waypoints.push(L.latLng(feature.geometry.coordinates.reverse()))
-
-    return L.marker(latlng, {icon:locationIcon})
-  }
-
-  function onEachFeature(feature, layer) {
-    layer.on('click', () => propertyClicked(feature, layer))
-  };
   
 
 
 
+  function handleFeatureProperty(element) {
+    featureProperty("{% url 'feature_property' %}", element)
+  }
+
+  
 
 
+  fetchProperties("{% url 'property' %}")
 
-
-  // Get the properties from API
-  axios("{% url 'property' %}").then(res => {
-    const data = JSON.parse(res.data);
-
-    properties = L.geoJSON(data, {
-      pointToLayer: pointToLayer,
-      onEachFeature: onEachFeature
-    });
-
-    properties.addTo(map);
-
-    
-    // L.Routing.control({
-    //   serviceUrl: 'http://router.project-osrm.org/route/v1',
-    //   waypoints,
-    //   fitSelectedRoutes: false,
-    //   lineOptions: {
-    //     styles: [{color: '#ffca00', opacity: 1, weight: 5}]
-    //   },
-    //   createMarker: function() { return null; },
-    //   routeWhileDragging: true
-    // }).addTo(map);
-
-
-  });
+  // L.Routing.control({
+  //   serviceUrl: 'http://router.project-osrm.org/route/v1',
+  //   waypoints,
+  //   fitSelectedRoutes: false,
+  //   lineOptions: {
+  //     styles: [{color: '#ffca00', opacity: 1, weight: 5}]
+  //   },
+  //   createMarker: function() { return null; },
+  //   routeWhileDragging: true
+  // }).addTo(map);
 
 
 </script>

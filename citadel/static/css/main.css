@@ -10881,7 +10881,9 @@ main.map .panel {
   z-index: 10000;
   position: absolute;
   top: 0;
-  right: 0;
+  right: -25rem;
+  -webkit-transition-duration: 0.3s;
+          transition-duration: 0.3s;
 }
 
 main.map .panel .ad {
