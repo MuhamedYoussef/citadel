@@ -39,11 +39,10 @@ class FeatureProprty(APIView):
 
     def get(self, request):
         pk = request.GET.get('pk', None)
+        radius = request.GET.get('radius', None)
         property = Property.objects.get(pk=pk)
 
-        # from django.contrib.gis.measure import D
-        max_distance = 1000 * 5 # distance in meter
-        buffer_width = max_distance / 40000000.0 * 360.0
+        buffer_width = int(radius) / 40000000.0 * 360.0
         area = property.location.buffer(buffer_width)
 
         pois = POI.objects.filter(location__intersects=area)

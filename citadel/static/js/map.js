@@ -21,9 +21,8 @@ map.on('click', e => console.log(e.latlng));
 
 
 // Custom icons
-const locationIcon = L.icon({iconUrl: static('img/location-icon.svg'), iconSize: [30, 30]});
-const subwayIcon = L.icon({iconUrl: static('img/subway-solid.svg'), iconSize: [30, 30]});
-
+const locationIcon = L.icon({iconUrl: static('img/location-icon.svg'), iconSize: [33, 33]});
+const subwayIcon = L.icon({iconUrl: static('img/subway-solid.svg'), iconSize: [20, 20]});
 
 
 
@@ -79,15 +78,22 @@ async function fetchProperties(url, params={}) {
 
 // Feature property
 async function featureProperty(url, element) {
-  if (activeState.layer.feature.properties.pk == element.dataset.id && activeState.isFeatured) return
+  const {id, radius} = element.dataset;
 
-  const res = await axios(`${url}?pk=${element.dataset.id}`);
+  // Reset before featuring
+  panelControl.resetFeatured();
+
+  updateMainFeaturesBtn('LOADING')
+
+  const res = await axios(`${url}?pk=${id}&radius=${radius}`);
   const data = JSON.parse(res.data)
   justShowOnMap(data)
 
   // Draw a circle arount the featured property and show paths to POIs
-  drawArea(getLongLat(activeState.layer.feature.geometry.coordinates), 1000 * 5)
+  drawArea(getLongLat(activeState.layer.feature.geometry.coordinates), parseInt(radius))
   drawPaths()
+
+  updateMainFeaturesBtn('LOADED', parseInt(radius))
   
   activeState.isFeatured = true;
 }
@@ -99,13 +105,14 @@ function drawArea(center, radius) {
   map.fitBounds(activeState.area.getBounds(), paddingTopLeft=[0,-200]);
 }
 
-// Draw paths   NOT TESTED YET!!!
+// Draw paths
 function drawPaths() {
-  const propertyCoords = activeState.layer.feature.geometry.coordinates;
+  const propertyCoords = getLongLat(activeState.layer.feature.geometry.coordinates);
   for (layer in activeState.features._layers) {
-    const POICoords = activeState.features._layers[layer].feature.geometry.coordinates;
-    L.Routing.control({
-      serviceUrl: 'http://router.project-osrm.org/route/v1',
+    const POICoords = getLongLat(activeState.features._layers[layer].feature.geometry.coordinates);
+    const route = L.Routing.control({
+      // serviceUrl: 'http://router.project-osrm.org/route/v1',
+      serviceUrl: 'http://192.168.1.7:5000/route/v1',
       waypoints: [propertyCoords, POICoords],
       fitSelectedRoutes: false,
       lineOptions: {
@@ -115,8 +122,34 @@ function drawPaths() {
       routeWhileDragging: true
     }).addTo(map);
 
+    activeState.routes.push(route)
   }
 };
+
+// Update the main button
+function updateMainFeaturesBtn(state, value) {
+  const element = document.querySelector('.featureProperty');
+  switch(state) {
+    case 'LOADING':
+      element.innerHTML = `
+      <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+      <span>Loading...</span>
+      `;
+      break;
+    case 'LOADED':
+      element.innerHTML = `${value / 1000}K Features`;
+      break;
+  }
+}
+
+
+
+
+
+
+
+
+
 
 
 

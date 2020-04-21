@@ -30,11 +30,23 @@
         </ul>
         <p class="address text-muted">Madenati, Main street, 3551</p>
         <div class="row mt-2">
-          <div class="col">
+          <div class="col px-2">
             <button class="btn btn-outline-secondary btn-block">Open offer</button>
           </div>
-          <div class="col">
-            <button id="featureProperty" class="btn btn-primary btn-block" onclick="handleFeatureProperty(this)" data-id="">Map features</button>
+          <div class="col px-2">
+            <div class="btn-group">
+              <!-- Feature btn -->
+              <button type="button" class="featureProperty btn btn-primary btn-block" onclick="handleFeatureProperty(this)" data-id="" data-radius="3000">3K Features</button>
+              <!-- Feature range select -->
+              <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" id="featuresDropdownMenu" data-toggle="dropdown" data-reference="parent">
+                <span class="sr-only"></span>
+              </button>
+              <div class="dropdown-menu" aria-labelledby="featuresDropdownMenu">
+                <a class="dropdown-item featureProperty" href="#" data-id="" data-radius="2000" onclick="handleFeatureProperty(this)">2K</a>
+                <a class="dropdown-item featureProperty" href="#" data-id="" data-radius="3000" onclick="handleFeatureProperty(this)">3K</a>
+                <a class="dropdown-item featureProperty" href="#" data-id="" data-radius="5000" onclick="handleFeatureProperty(this)">5K</a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -59,33 +71,7 @@
 <script src="{% static 'js/map.js' %}"></script>
 <script src="{% static 'js/control.js' %}"></script>
 <script>
-
-
-
-  
-
-
-
-  function handleFeatureProperty(element) {
-    featureProperty("{% url 'feature_property' %}", element)
-  }
-
-  
-
-
+  const handleFeatureProperty = element => featureProperty("{% url 'feature_property' %}", element);
   fetchProperties("{% url 'property' %}")
-
-  // L.Routing.control({
-  //   serviceUrl: 'http://router.project-osrm.org/route/v1',
-  //   waypoints,
-  //   fitSelectedRoutes: false,
-  //   lineOptions: {
-  //     styles: [{color: '#ffca00', opacity: 1, weight: 5}]
-  //   },
-  //   createMarker: function() { return null; },
-  //   routeWhileDragging: true
-  // }).addTo(map);
-
-
 </script>
 {% endblock %}

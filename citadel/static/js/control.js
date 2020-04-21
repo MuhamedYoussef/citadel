@@ -3,7 +3,8 @@ let activeState = {
   layer: null,
   area: null,
   isFeatured: false,
-  features: null
+  features: null,
+  routes: []
 };
 
 
@@ -36,8 +37,10 @@ class PanelControl {
 
   fillData(feature, layer) {
     // A little edit before filling the data
-    if (typeof feature.properties.price == 'number') {
-      feature.properties.price = formatter.format(feature.properties.price)
+    const {pk, price} = feature.properties;
+
+    if (typeof price == 'number') {
+      feature.properties.price = formatter.format(price)
     }
 
     // Fill the panel
@@ -50,15 +53,16 @@ class PanelControl {
     })
 
 
-    this.panelHTML.querySelector('#featureProperty').dataset.id = feature.properties.pk;
+    this.panelHTML.querySelectorAll('.featureProperty').forEach(elem => elem.dataset.id = pk)
   }
 
 
   resetFeatured() {
     if (activeState.area) activeState.area.remove()
     if (activeState.features) activeState.features.remove()
+    activeState.routes.forEach(route => route.remove())
 
-    activeState = {layer: null, area: null, isFeatured: false, features: null}
+    activeState = {...activeState, area: null, isFeatured: false, features: null, routes: []}
   }
 
 }
