@@ -1,12 +1,11 @@
+from django.core.serializers import serialize
 from django.shortcuts import render
 from django.views import generic
-from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.core.serializers import serialize
+from rest_framework.views import APIView
 
+from .models import POI, Property
 from .serializers import PropertySerializer
-from .models import Property, POI
-
 
 
 class PropertyListView(generic.ListView):
